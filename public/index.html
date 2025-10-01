@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌌 Colonize.io</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="game-canvas"></canvas>
+    
+    <div id="ui-top-bar">
+        <div id="credits-display">Crédits: <span>0</span> Cr</div>
+    </div>
+
+    <div id="selection-panel" class="hidden">
+        <div class="panel-header">
+            <h3 id="planet-name">Planète Alpha</h3>
+            <div id="planet-stats"></div>
+        </div>
+        <div class="panel-section">
+            <h4>Garnison</h4>
+            <div id="garrison-list"></div>
+        </div>
+        <div class="panel-section">
+            <h4>Construire</h4>
+            <div id="production-menu">
+                <button class="build-btn" data-type="fighter">Chasseur (40 Cr)</button>
+                <button class="build-btn" data-type="cruiser">Croiseur (150 Cr)</button>
+                <button class="build-btn" data-type="battleship">Cuirassé (600 Cr)</button>
+            </div>
+        </div>
+        <div class="panel-section">
+            <h4>Améliorations</h4>
+            <div id="upgrade-menu">
+                <button class="upgrade-btn" data-type="forge">Fonderie (250 Cr)</button>
+                <button class="upgrade-btn" data-type="shield">Bouclier (400 Cr)</button>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>

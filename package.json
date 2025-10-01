@@ -1,0 +1,13 @@
+{
+  "name": "colonize-emoji-3d-final",
+  "version": "1.2.0",
+  "description": "Colonize.io Final - Optimized 3D Emoji Edition (Node.js + Socket.io + Three.js)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  }
+}

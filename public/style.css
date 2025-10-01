@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Roboto Mono', monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#ui-top-bar {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(12, 12, 30, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 25px;
+    border-radius: 12px;
+    z-index: 10;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+#credits-display {
+    color: #ffd700;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+#selection-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    background: rgba(12, 12, 30, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    z-index: 10;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#selection-panel.hidden {
+    display: none;
+}
+
+.panel-header {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#planet-name {
+    margin: 0;
+    color: #e0e0ff;
+    font-size: 1.2em;
+}
+
+#planet-stats {
+    font-size: 0.9em;
+    color: #ccc;
+    margin-top: 5px;
+}
+
+.panel-section {
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.panel-section h4 {
+    margin: 0 0 10px 0;
+    text-align: center;
+    color: #aaa;
+    letter-spacing: 1px;
+    font-size: 0.9em;
+}
+
+#production-menu, #upgrade-menu, #garrison-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#garrison-list {
+    font-weight: bold;
+    gap: 15px;
+}
+
+.build-btn, .upgrade-btn {
+    background-color: rgba(50, 60, 100, 0.8);
+    color: #e0e0ff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-family: 'Roboto Mono', monospace;
+    transition: all 0.2s ease;
+    flex-grow: 1;
+}
+
+.build-btn:hover, .upgrade-btn:hover {
+    background-color: rgba(80, 90, 150, 1);
+    border-color: #fff;
+}
+
+.build-btn:disabled, .upgrade-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#game-over-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    z-index: 100;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#winner-message {
+    font-size: 2.5em;
+    margin: 0;
+    font-weight: 700;
+}
