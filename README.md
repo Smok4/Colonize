@@ -1,4 +1,4 @@
-Colonize.io — Final 3D Emoji Edition V2
+Colonize.io — Alpha 3D V 0.2
 =======================================
 
 Enhancements over V1:
