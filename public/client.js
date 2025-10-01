@@ -107,7 +107,7 @@ function gameLoop(currentTime) {
 }
 
 // --- Initialisation et Écouteurs d'Événements ---
-sfx.init(); sfx.load('ambient', 'audio/ambient.mp3', true, 0.3); sfx.load('send_fleet', 'audio/send_fleet.wav', false, 0.5); sfx.load('explosion', 'audio/explosion.wav', false, 0.6); sfx.load('capture', 'audio/capture.wav', false, 0.7); sfx.load('loss', 'audio/loss.wav', false, 0.7);
+sfx.init(); sfx.load('ambient', 'audio/ambient.mp3', true, 0.3); sfx.load('send_fleet', 'audio/send_fleet.mp3', false, 0.5); sfx.load('explosion', 'audio/explosion.mp3', false, 0.6); sfx.load('capture', 'audio/capture.mp3', false, 0.7); sfx.load('loss', 'audio/loss.mp3', false, 0.7);
 initStars(); resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 document.body.addEventListener('click', () => { sfx.unlock(); }, { once: true });
