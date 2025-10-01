@@ -1,4 +1,4 @@
-Colonize.io — Alpha 3D V 0.2
+Colonize.io — Alpha 2D V 0.2
 =======================================
 
 Enhancements over V1:
