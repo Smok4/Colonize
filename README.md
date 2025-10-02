@@ -112,9 +112,8 @@ Les contributions sont les bienvenues ! N'hésite pas à :
 
 ## 📝 License
 
-MIT
+AGPL 3
 
 ---
 
-**Version actuelle**: 0.3 - Alpha
-**Dernière mise à jour**: Octobre 2025
+**Note**: Colonize.io est actuellement en développement actif. Le nom est provisoire et pourrait changer.
