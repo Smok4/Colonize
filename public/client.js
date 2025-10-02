@@ -2746,7 +2746,10 @@ socket.on('gameState', (state) => {
             previousPlanetsState[p.id] = p.owner;
         }); 
     } 
-    gameState = state;
+    //gameState = state;
+	if (state.planets) gameState.planets = state.planets;
+	if (state.players) gameState.players = state.players;
+	if (state.fleets) gameState.fleets = state.fleets;
     updateTechTreeButton(); // Mise à jour du bouton des technologies
     updateLocateButton();   // Mise à jour du bouton "Ma planète"
 });
@@ -2757,7 +2760,6 @@ socket.on('combatResult', (data) => {
     const color = owner ? owner.color : NEUTRAL_COLOR; 
     animations.push(new Explosion(data.x, data.y, color)); 
 });
-
 socket.on('combatDetails', (data) => {
     // Création d'un élément de notification flottant
     const notification = document.createElement('div');

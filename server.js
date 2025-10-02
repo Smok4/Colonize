@@ -74,6 +74,10 @@ const PLANET_COUNT = 250;
 const MIN_PLANET_RADIUS = 20;
 const MAX_PLANET_RADIUS = 50;
 const GAME_TICK_RATE = 1000 / 30;
+let PLANETS_TICK_INDEX = 1; // start index at 1
+const PLANETS_UPDATE_INTERVAL = 15; // Envoyer l'état des planètes toutes les 15 ticks
+let PLAYERS_TICK_INDEX = 5; // start index at 5, avoid collision with planets
+const PLAYERS_UPDATE_INTERVAL = 10; // Envoyer l'état des joueurs toutes les 10 ticks
 
 const TEAM_COLORS = { 1: ['#4d94ff', '#3366ff'], 2: ['#ff4d4d', '#ff3333'] };
 const MAX_PLAYERS_PER_TEAM = 2;
@@ -478,7 +482,8 @@ function gameLoop() {
     if (!gameInProgress) return;
 
     // Gestion des ressources et du commerce
-    Object.values(players).forEach(player => {
+	for (const playerId in players) {
+		const player = players[playerId];
         // Revenus de base
         let totalIncome = 0;
         planets.forEach(planet => { 
@@ -535,9 +540,10 @@ function gameLoop() {
             }
         });
         player.resources.credits += totalIncome / (1000 / GAME_TICK_RATE);
-    });
+    };
 
-    fleets.forEach((fleet, index) => {
+	for (let index = 0; index < fleets.length; index++) {
+		const fleet = fleets[index];
         // Gestion du mouvement de la flotte
         let targetX, targetY;
         if (fleet.path && fleet.path.length > 0) {
@@ -600,10 +606,16 @@ function gameLoop() {
         
         fleet.x += (dx / dist) * (speed / (1000 / GAME_TICK_RATE));
         fleet.y += (dy / dist) * (speed / (1000 / GAME_TICK_RATE));
-    });
+    };
 
     checkEndGame();
-    io.emit('gameState', { planets, fleets, players });
+	const gameState = { fleets };
+	PLANETS_TICK_INDEX = (PLANETS_TICK_INDEX + 1) % PLANETS_UPDATE_INTERVAL;
+	PLAYERS_TICK_INDEX = (PLAYERS_TICK_INDEX + 1) % PLAYERS_UPDATE_INTERVAL;
+	if (PLANETS_TICK_INDEX === 0) gameState.planets = planets;
+	if (PLAYERS_TICK_INDEX === 0) gameState.players = players;
+    //io.emit('gameState', { planets, fleets, players });
+	io.emit('gameState', gameState);
 }
 
 function resolveCombat(fleet, destinationPlanet) {
