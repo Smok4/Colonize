@@ -909,7 +909,44 @@ if (fleetPercentageSlider && fleetPercentageValue) {
 
 // --- Gestionnaire de Textures ---
 const textures = {};
-function loadTextures() { const textureNames = ['moon', 'sun', 'saturn', 'earth', 'mars', 'mercury', 'jupiter', 'neptune', 'uranus', 'saturn_ring']; const promises = textureNames.map(name => new Promise((resolve, reject) => { const img = new Image(); img.src = `textures/${name}.jpg`; img.onload = () => { textures[name] = img; console.log(`Texture ${name} chargée.`); resolve(); }; img.onerror = () => reject(new Error(`Le fichier textures/${name}.jpg est manquant ou inaccessible.`)); })); return Promise.all(promises); }
+function loadTextures() {
+    const textureNames = [
+        'moon', 
+        'sun', 
+        'saturn', 
+        'earth', 
+        'mars', 
+        'mercury', 
+        'jupiter', 
+        'neptune', 
+        'uranus'
+    ];
+
+    const promises = textureNames.map(name => new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = `textures/${name}.jpg`;
+        
+        img.onload = () => {
+            console.log(`Texture ${name} chargée.`);
+            textures[name] = img;
+            resolve();
+        };
+        
+        img.onerror = () => {
+            console.error(`Erreur de chargement de la texture ${name}`);
+            reject(new Error(`Le fichier textures/${name}.jpg est manquant ou inaccessible.`));
+        };
+    }));
+    
+    return Promise.all(promises)
+        .then(() => {
+            console.log('Toutes les textures ont été chargées avec succès.');
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des textures:', error);
+            throw error;
+        });
+}
 
 // --- Classes pour les Animations ---
 class Particle {
@@ -2316,8 +2353,258 @@ socket.on('researchFailed', (data) => {
 });
 
 // --- Initialisation et Écouteurs d'Événements ---
-sfx.init(); sfx.load('ambient', 'audio/ambient.mp3', true, 0.3); sfx.load('send_fleet', 'audio/send_fleet.wav', false, 0.5); sfx.load('explosion', 'audio/explosion.wav', false, 0.6); sfx.load('capture', 'audio/capture.wav', false, 0.7); sfx.load('loss', 'audio/loss.wav', false, 0.7);
-initStars(); resizeCanvas();
+
+// Création des éléments UI
+const gameControls = document.createElement('div');
+gameControls.className = 'game-controls';
+document.body.appendChild(gameControls);
+
+// Créer l'infobulle de planète
+const planetTooltip = document.createElement('div');
+planetTooltip.id = 'planet-tooltip';
+document.body.appendChild(planetTooltip);
+
+// Créer le leaderboard
+const leaderboard = document.createElement('div');
+leaderboard.id = 'leaderboard';
+leaderboard.innerHTML = `
+    <div class="leaderboard-header">
+        🏆 Classement
+    </div>
+    <div class="leaderboard-content"></div>
+`;
+document.body.appendChild(leaderboard);
+
+// Créer le bouton de localisation
+const locateButton = document.createElement('button');
+locateButton.id = 'locate-home';
+locateButton.className = 'control-button';
+locateButton.innerHTML = '🎯 Ma planète';
+gameControls.appendChild(locateButton);
+
+// Fonction de mise à jour du leaderboard
+function updateLeaderboard() {
+    const content = leaderboard.querySelector('.leaderboard-content');
+    const playerStats = Object.entries(gameState.players)
+        .map(([id, player]) => {
+            const planetsCount = gameState.planets.filter(p => p.owner === id).length;
+            const shipsCount = gameState.planets.reduce((total, planet) => {
+                if (planet.owner === id) {
+                    return total + Object.values(planet.ships).reduce((a, b) => a + b, 0);
+                }
+                return total;
+            }, 0);
+            return { id, player, planetsCount, shipsCount };
+        })
+        .sort((a, b) => b.planetsCount - a.planetsCount);
+
+    content.innerHTML = playerStats.map(({ player, planetsCount, shipsCount }) => `
+        <div class="leaderboard-player">
+            <div class="player-color" style="background-color: ${player.color}"></div>
+            <div class="player-name">Joueur ${player.teamId}</div>
+            <div class="player-stats">
+                <div class="player-stat">
+                    <span class="player-stat-icon">🌍</span>
+                    ${planetsCount}
+                </div>
+                <div class="player-stat">
+                    <span class="player-stat-icon">🚀</span>
+                    ${shipsCount}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Fonction de mise à jour de l'infobulle de planète
+function updatePlanetTooltip(planet) {
+    if (!planet) {
+        planetTooltip.classList.remove('visible');
+        return;
+    }
+
+    const owner = planet.owner ? gameState.players[planet.owner] : null;
+    const totalShips = Object.values(planet.ships).reduce((a, b) => a + b, 0);
+
+    planetTooltip.innerHTML = `
+        <div class="tooltip-header">
+            <div class="tooltip-planet-type">${planet.type.charAt(0).toUpperCase() + planet.type.slice(1)}</div>
+            ${owner ? `<div class="tooltip-owner" style="color: ${owner.color}">Joueur ${owner.teamId}</div>` : ''}
+        </div>
+        <div class="tooltip-stats">
+            <div class="tooltip-stat">
+                <span class="tooltip-stat-icon">⚔️</span>
+                <span class="tooltip-stat-value">${totalShips} vaisseaux</span>
+            </div>
+            <div class="tooltip-stat">
+                <span class="tooltip-stat-icon">🛡️</span>
+                <span class="tooltip-stat-value">${planet.shieldHP} bouclier</span>
+            </div>
+            <div class="tooltip-stat">
+                <span class="tooltip-stat-icon">⛰️</span>
+                <span class="tooltip-stat-value">${Math.floor(planet.resources.minerals.storage)} minerais</span>
+            </div>
+            <div class="tooltip-stat">
+                <span class="tooltip-stat-icon">⚡</span>
+                <span class="tooltip-stat-value">${Math.floor(planet.resources.energy.storage)} énergie</span>
+            </div>
+        </div>
+    `;
+    planetTooltip.classList.add('visible');
+}
+
+// Fonction pour créer l'indicateur de planète
+function createPlanetIndicator(planet) {
+    const existingIndicator = document.querySelector('.planet-indicator');
+    if (existingIndicator) {
+        existingIndicator.remove();
+    }
+
+    const indicator = document.createElement('div');
+    indicator.className = 'planet-indicator';
+    indicator.style.left = `${planet.x}px`;
+    indicator.style.top = `${planet.y - planet.radius - 60}px`;
+    
+    const arrow = document.createElement('div');
+    arrow.className = 'planet-arrow';
+    
+    const highlight = document.createElement('div');
+    highlight.className = 'planet-highlight';
+    highlight.style.left = `${-planet.radius - 10}px`;
+    highlight.style.top = `${-planet.radius - 10}px`;
+    highlight.style.width = `${planet.radius * 2 + 20}px`;
+    highlight.style.height = `${planet.radius * 2 + 20}px`;
+    
+    indicator.appendChild(arrow);
+    indicator.appendChild(highlight);
+    document.body.appendChild(indicator);
+    
+    // Supprimer l'indicateur après 5 secondes
+    setTimeout(() => {
+        indicator.remove();
+    }, 5000);
+}
+
+// Fonction pour trouver et centrer la vue sur la planète du joueur
+function focusOnPlayerPlanet() {
+    if (!myPlayerId) return;
+    
+    // Trouver la première planète du joueur
+    const playerPlanet = gameState.planets.find(p => p.owner === myPlayerId);
+    if (!playerPlanet) {
+        console.log("Vous ne possédez aucune planète");
+        return;
+    }
+    
+    // Créer l'indicateur de planète
+    createPlanetIndicator(playerPlanet);
+    
+    // Calculer la position centrée
+    const viewWidth = canvas.width / currentZoom;
+    const viewHeight = canvas.height / currentZoom;
+    
+    // Animer le déplacement de la caméra
+    const targetX = playerPlanet.x - viewWidth / 2;
+    const targetY = playerPlanet.y - viewHeight / 2;
+    
+    // Animation douce vers la planète
+    animateCameraTo(targetX, targetY);
+}
+
+// Fonction d'animation douce de la caméra
+function animateCameraTo(targetX, targetY) {
+    const startX = camera.x;
+    const startY = camera.y;
+    const duration = 1000; // 1 seconde
+    const startTime = Date.now();
+    
+    function animate() {
+        const currentTime = Date.now();
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Fonction d'easing pour un mouvement plus naturel
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        
+        camera.x = startX + (targetX - startX) * easeProgress;
+        camera.y = startY + (targetY - startY) * easeProgress;
+        
+        constrainCamera();
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    }
+    
+    animate();
+}
+
+// Ajouter les événements
+locateButton.addEventListener('click', focusOnPlayerPlanet);
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'h' || event.key === 'H') {
+        focusOnPlayerPlanet();
+    }
+});
+
+// Fonction pour mettre à jour l'état du bouton
+function updateLocateButton() {
+    if (!myPlayerId || !gameState.planets) return;
+    
+    const myPlanets = gameState.planets.filter(p => p.owner === myPlayerId);
+    
+    if (myPlanets.length > 0) {
+        locateButton.classList.add('available');
+        locateButton.classList.remove('locked');
+        locateButton.innerHTML = '🎯 Ma planète';
+    } else {
+        locateButton.classList.add('locked');
+        locateButton.classList.remove('available');
+        locateButton.innerHTML = '🔒 Aucune planète';
+    }
+}
+
+// Initialisation des éléments audio et du jeu
+sfx.init();
+sfx.load('ambient', 'audio/ambient.mp3', true, 0.3);
+sfx.load('send_fleet', 'audio/send_fleet.mp3', false, 0.5);
+sfx.load('explosion', 'audio/explosion.mp3', false, 0.6);
+sfx.load('capture', 'audio/capture.mp3', false, 0.7);
+sfx.load('loss', 'audio/loss.mp3', false, 0.7);
+initStars();
+resizeCanvas();
+
+// Gestionnaire de zoom
+canvas.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    
+    // Position du curseur dans l'espace du jeu avant le zoom
+    const worldX = mouseX / currentZoom + camera.x;
+    const worldY = mouseY / currentZoom + camera.y;
+    
+    // Ajuster le zoom
+    const zoomFactor = -Math.sign(event.deltaY) * ZOOM_SPEED;
+    let newZoom = currentZoom * (1 + zoomFactor);
+    
+    // Limiter le zoom
+    newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, newZoom));
+    
+    if (newZoom !== currentZoom) {
+        currentZoom = newZoom;
+        
+        // Zoomer vers la position de la souris
+        camera.x = worldX - (mouseX / currentZoom);
+        camera.y = worldY - (mouseY / currentZoom);
+        
+        // Contraindre la caméra aux limites
+        constrainCamera();
+    }
+}, { passive: false });
+
 window.addEventListener('resize', resizeCanvas);
 document.body.addEventListener('click', () => { sfx.unlock(); }, { once: true });
 canvas.addEventListener('mousemove', (event) => {
