@@ -13,8 +13,20 @@
     <canvas id="game-canvas"></canvas>
     
     <div id="ui-top-bar">
-        <div id="credits-display">Crédits: <span>0</span> Cr</div>
+        <div id="resources-display">
+            <div class="resource-item credits">
+                💰<span class="resource-value">0</span>
+            </div>
+            <div class="resource-item minerals">
+                ⛰️<span class="resource-value">0</span>
+            </div>
+            <div class="resource-item energy">
+                ⚡<span class="resource-value">0</span>
+            </div>
+        </div>
     </div>
+
+    <div class="notifications-list"></div>
 
     <div id="selection-panel" class="hidden">
         <div class="panel-header">
@@ -28,9 +40,14 @@
         <div class="panel-section">
             <h4>Construire</h4>
             <div id="production-menu">
-                <button class="build-btn" data-type="fighter">Chasseur (40 Cr)</button>
-                <button class="build-btn" data-type="cruiser">Croiseur (150 Cr)</button>
-                <button class="build-btn" data-type="battleship">Cuirassé (600 Cr)</button>
+                <button class="build-btn" data-type="fighter">Ch.(40)</button>
+                <button class="build-btn" data-type="cruiser">Cr.(150)</button>
+                <button class="build-btn" data-type="battleship">Cu.(600)</button>
+            </div>
+            <div class="fleet-percentage-control">
+                <div class="slider-label">% de la flotte à envoyer:</div>
+                <input type="range" id="fleet-percentage" min="1" max="100" value="100" step="1">
+                <span id="fleet-percentage-value">100%</span>
             </div>
         </div>
         <div class="panel-section">
@@ -40,10 +57,99 @@
                 <button class="upgrade-btn" data-type="shield">Bouclier (400 Cr)</button>
             </div>
         </div>
+        <div class="panel-section">
+            <h4>Routes Commerciales</h4>
+            <div id="trade-routes"></div>
+            <div class="trade-route-controls">
+                <select id="trade-destination" class="styled-select">
+                    <option value="">Choisir une planète...</option>
+                </select>
+                <div class="trade-input-group">
+                    <select id="trade-resource" class="styled-select">
+                        <option value="minerals">💎 Minerais</option>
+                        <option value="energy">⚡ Énergie</option>
+                    </select>
+                    <input type="number" id="trade-amount" min="1" value="1" step="1" title="Quantité à échanger">
+                </div>
+                <button id="establish-trade-route" class="action-button">
+                    <span>📦 Établir la Route</span>
+                </button>
+            </div>
+        </div>
+        <div class="panel-section">
+            <h4>⚔️ Formation</h4>
+            <div class="formation-controls">
+                <select id="formation-select" class="styled-select">
+                    <option value="standard">🔰 Formation Standard</option>
+                    <option value="offensive">⚔️ Formation Offensive</option>
+                    <option value="defensive">🛡️ Formation Défensive</option>
+                    <option value="scout">🔍 Formation Éclaireur</option>
+                </select>
+                <button id="set-rally-point" class="action-button">
+                    <span>🎯 Point de Ralliement</span>
+                </button>
+                <div class="rally-point-info"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="path-controls" class="hidden">
+        <button id="confirm-path">Confirmer Trajet</button>
+        <button id="cancel-path">Annuler</button>
+    </div>
+
+    <div class="game-controls">
+        <button id="open-tech-tree"><span>🔬 Recherche</span></button>
+        <button id="locate-home"><span>🎯 Ma Planète</span></button>
+    </div>
+
+    <div id="tech-panel">
+        <h2 class="tech-panel-title">Centre de Recherche</h2>
+        <div class="tech-panel-description">
+            Recherchez de nouvelles technologies pour améliorer votre empire
+        </div>
+        <div class="tech-categories">
+            <div class="tech-category">
+                <h3>🎯 Technologies Militaires</h3>
+                <div class="tech-category-description">
+                    Améliorez vos capacités de combat et votre puissance militaire
+                </div>
+                <div class="tech-tree" id="military-tech-tree"></div>
+            </div>
+            <div class="tech-category">
+                <h3>💰 Technologies Économiques</h3>
+                <div class="tech-category-description">
+                    Optimisez votre production et votre commerce
+                </div>
+                <div class="tech-tree" id="economy-tech-tree"></div>
+            </div>
+            <div class="tech-category">
+                <h3>🚀 Technologies d'Exploration</h3>
+                <div class="tech-category-description">
+                    Développez vos capacités d'exploration et de mouvement
+                </div>
+                <div class="tech-tree" id="exploration-tech-tree"></div>
+            </div>
+        </div>
+        <div class="tech-panel-footer">
+            <div class="tech-legend">
+                <span class="tech-status available">🟢 Disponible</span>
+                <span class="tech-status researched">✅ Recherché</span>
+                <span class="tech-status locked">🔒 Verrouillé</span>
+            </div>
+        </div>
     </div>
     
     
     <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Vérification que Socket.IO est bien chargé
+        if (typeof io === 'undefined') {
+            console.error('Socket.IO n\'est pas chargé !');
+        } else {
+            console.log('Socket.IO est chargé correctement');
+        }
+    </script>
     <script src="client.js"></script>
 </body>
 </html>
