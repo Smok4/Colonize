@@ -171,7 +171,7 @@ Les contributions sont les bienvenues ! N'hésite pas à ouvrir une issue ou une
 
 ## 📝 License
 
-MIT
+AGPL 3
 
 ---
 
