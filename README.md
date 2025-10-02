@@ -1,23 +1,15 @@
-Colonize.io — Alpha 2D V 0.2
-=======================================
+# 🌌 Colonize.io - Alpha 3D V 0.3
 
-Enhancements over V1:
-- Free camera in space with OrbitControls.
-- Sidebar appears on hover over a planet to show player stats.
-- Glow effect on owned planets and animated nebula for immersion.
-- Improved starfield with slight shimmer.
-- Fleet trails to visualize movement.
+> Un jeu de stratégie spatiale multijoueur temps réel - 100% navigateur
 
-How to run:
-1. unzip and cd into folder
-2. npm install
-3. npm start
-4. Open http://localhost:3000
-
-
-# 🌌 Colonize.io
-
-> Stratégie spatiale multijoueur temps réel - 100% navigateur
+## 🌟 Nouveautés V0.3
+- Vue spatiale complètement en 3D avec OrbitControls
+- Effet de lueur sur les planètes possédées
+- Nébuleuses animées pour plus d'immersion
+- Champ d'étoiles amélioré avec scintillement
+- Traces de flotte pour visualiser les mouvements
+- Panneau latéral contextuel au survol des planètes
+- Interface utilisateur améliorée et plus intuitive
 
 ## 📋 Vue d'ensemble
 
@@ -31,10 +23,25 @@ How to run:
 - **Style**: Immersion spatiale 3D avec planètes réalistes
 - **Cible**: Joueurs occasionnels et compétitifs
 
+## 🚀 Installation rapide
+
+```bash
+# 1. Cloner le dépôt
+git clone https://github.com/Smok4/Colonize.git
+
+# 2. Installer les dépendances
+npm install
+
+# 3. Démarrer le serveur
+npm start
+
+# 4. Ouvrir dans le navigateur
+http://localhost:3000
+```
+
 ## 🎮 Gameplay
 
 ### Objectif
-
 Colonise des planètes, construis ta flotte et domine la galaxie !
 
 ### Mécaniques de base
@@ -50,124 +57,58 @@ Colonise des planètes, construis ta flotte et domine la galaxie !
 - 🏗️ Améliorer les bâtiments (fonderie, boucliers)
 - 🛡️ Activer des défenses planétaires
 
-### Interface & Contrôles
+### Contrôles
+- **Clic gauche**: Sélectionner/interagir avec une planète
+- **Clic droit + déplacement**: Rotation de la caméra
+- **Scroll**: Zoom avant/arrière
+- **Clic gauche maintenu + déplacement**: Déplacer la vue
 
-**Sélection de planète**
-- Clic sur une planète → panneau latéral s'affiche
-- Informations visibles:
-  - Nom de la planète
-  - Niveau de fonderie
-  - Points de bouclier
-  - Garnison (vaisseaux présents)
-  - Boutons d'amélioration
+## 🎨 Caractéristiques techniques
 
-**Navigation**
-- **Clic gauche**: Sélectionner une planète
-- **Clic sur planète ennemie**: Attaquer depuis la planète sélectionnée
-- **Scroll**: Zoom caméra
+### Graphismes
+- Moteur 3D complet avec Three.js
+- Planètes texturées et détaillées
+- Effets visuels avancés (lueur, nébuleuses, traces de flotte)
+- Interface utilisateur intuitive et réactive
 
-## 🎨 Direction artistique
+### Audio
+- Effets sonores immersifs
+- Ambiance spatiale
+- Sons de feedback pour les actions
 
-### Graphismes 3D
-
-- Planètes en 3D avec textures variées (terre, lave, glace, désert...)
-- Fond spatial animé (étoiles scintillantes, nébuleuses)
-- Halo bleu autour de tes planètes
-- Interface minimaliste et futuriste
-- **Performance cible**: 60 FPS constant
-
-### UI/UX
-
-- Canvas 3D principal (vue spatiale)
-- Panel latéral contextuel
-- Indicateur de ressources (haut gauche)
-- Notifications discrètes (attaques, colonisations)
+### Performance
+- Optimisé pour 60 FPS
+- Support multi-plateformes
+- Chargement rapide des ressources
 
 ## 🛠️ Stack technique
 
-### Client
-
-```
+### Frontend
 - HTML5 / CSS3 / JavaScript
-- Three.js (rendu 3D WebGL)
-- Socket.io (temps réel)
-- Responsive (PC / tablettes / mobile)
-```
+- Three.js pour le rendu 3D
+- Socket.io pour la communication temps réel
 
-### Serveur
-
-```
+### Backend
 - Node.js + Express
-- Socket.io (synchronisation temps réel)
-- Gestion des parties et état du jeu
-- Boucle serveur pour mise à jour périodique
-```
+- WebSocket pour la synchronisation
+- Architecture optimisée pour le multijoueur
 
-### Optimisations
+## �️ Roadmap
 
-- Géométries instanciées pour performances
-- Limitation polygones par planète
-- Compression textures
-- Architecture optimisée pour 50 joueurs + 50 planètes à 60 FPS
-
-## 🚀 Roadmap
-
-### MVP (v0.1)
-
-- [x] Carte spatiale 3D
-- [ ] Support 20-50 joueurs simultanés
-- [ ] Système de colonisation
-- [ ] Envoi de flottes
-- [ ] Panel planète interactif
-
-### Version 1.0
-
-- [ ] Optimisation FPS finale
-- [ ] Système de progression (stats, scores)
-- [ ] Interface polie et immersive
-- [ ] Balance gameplay affinée
-
-### Évolutions futures (v2+)
-
+### Prochaines fonctionnalités
 - [ ] Système d'alliances
-- [ ] Classement global (ELO/leaderboard)
-- [ ] Compétences spéciales
-- [ ] Skins de planètes personnalisables
+- [ ] Chat in-game
+- [ ] Classement des joueurs
+- [ ] Nouvelles unités et bâtiments
+- [ ] Événements spéciaux
 - [ ] Mode Battle Royale
-
-## 🏗️ Architecture multijoueur
-
-**Temps réel**
-- Communication via WebSocket (Socket.io)
-- Identification unique par joueur (ID généré à la connexion)
-- Synchronisation état des planètes côté serveur
-- Broadcast des actions aux clients
-
-**Scalabilité**
-- Architecture optimisée pour 50 joueurs simultanés
-- Gestion de multiples parties en parallèle
-- État du jeu centralisé serveur
-
-## 📦 Installation & Développement
-
-```bash
-# Clone le repo
-git clone https://github.com/ton-user/colonize-io.git
-cd colonize-io
-
-# Install dependencies
-npm install
-
-# Run dev server
-npm run dev
-
-# Run production
-npm start
-```
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésite pas à ouvrir une issue ou une PR.
+Les contributions sont les bienvenues ! N'hésite pas à :
+- Signaler des bugs
+- Proposer des améliorations
+- Soumettre des pull requests
 
 ## 📝 License
 
@@ -175,4 +116,5 @@ MIT
 
 ---
 
-**Note**: Colonize.io est actuellement en développement actif. Le nom est provisoire et pourrait changer.
+**Version actuelle**: 0.3 - Alpha
+**Dernière mise à jour**: Octobre 2025
